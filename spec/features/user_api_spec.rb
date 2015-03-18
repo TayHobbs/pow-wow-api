@@ -5,21 +5,45 @@ describe 'User Api', :type => :request do
   it 'requires a valid token to retrieve a list of users' do
     User.create!(user_attributes)
     get '/users'
-    expect(response.body).to eq 1
+    expect(response.status).to eq 401
   end
 
-  # it 'requires a valid token to retrieve a specific user' do
-  #   User.create!(user_attributes)
-  #   get '/api/v1/users/1'
-  #   expect(response.body).to include("Unauthorized.")
-  # end
+  it 'requires a valid token to retrieve a specific user' do
+    User.create!(user_attributes)
+    get '/users/1'
+    expect(response.status).to eq 401
+  end
 
-  # it 'does not require an auth token to create an user' do
-  #   expect(User.all.count).to eq 0
+  it 'does not require an auth token to create an user' do
+    expect(User.all.count).to eq 0
 
-  #   post '/api/v1/users/create', {email: 'test@test.com', username: 'test', password: 'asdf'}
-  #   expect(response.body).to include('User successfully created!')
-  #   expect(User.all.count).to equal 1
-  # end
+    post '/users', {user: {email: 'test@test.com', username: 'test', password: 'asdf'}}
+    expect(User.all.count).to equal 1
+  end
+
+  it 'returns auth token immediately after creating a user' do
+    post '/users', {user: {email: 'test@test.com', username: 'test', password: 'asdf'}}
+    expect(ApiKey.count).to eq 1
+
+    token = ApiKey.find 1
+    expect(response.body).to include(token.access_token)
+
+  end
+
+  it "returns a list of users when a valid token is provided" do
+    user = User.create!(user_attributes)
+    api_key = user.session_api_key
+    get '/users', {}, { 'Authorization' => "Bearer #{api_key.access_token}" }
+    expect(response.body).to eq(
+      "{\"users\":[{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":false}]}")
+  end
+
+  it "returns user info when a valid token is provided" do
+    user = User.create!(user_attributes)
+    api_key = user.session_api_key
+    get '/users/1', {}, { 'Authorization' => "Bearer #{api_key.access_token}" }
+    expect(response.body).to eq(
+      "{\"user\":{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":false}}")
+  end
 
 end

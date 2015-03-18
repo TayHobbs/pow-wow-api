@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :ensure_authenticated_user, only: [:show]
+  before_filter :ensure_authenticated_user, only: [:index, :show]
 
-  # Returns list of users. This requires authorization
   def index
     render json: User.all
   end
@@ -21,8 +20,7 @@ class UsersController < ApplicationController
 
   private
 
-  # Strong Parameters (Rails 4)
   def user_params
-    params.require(:user).permit(:name, :username, :email, :password, :password_confirmation)
+    params.require(:user).permit(:username, :email, :password, :password_confirmation)
   end
 end
