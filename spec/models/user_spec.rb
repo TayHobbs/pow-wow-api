@@ -56,4 +56,10 @@ describe "User Validation" do
     expect(user.admin).to eq false
   end
 
+  it "#session" do
+    user = User.create!(user_attributes)
+    api_key = user.session_api_key
+    expect(api_key.access_token).to match(/\S{32}/)
+    assert api_key.user_id == user.id
+  end
 end

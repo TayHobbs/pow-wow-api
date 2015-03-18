@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   has_secure_password
+  has_many :api_keys
+
   validates :username, presence: true,
                   uniqueness: { case_sensitive: false }
   validates :email, presence: true,
@@ -7,6 +9,7 @@ class User < ActiveRecord::Base
                   uniqueness: { case_sensitive: false }
   validates :password, presence: true
 
-
-
+  def session_api_key
+    api_keys.active.session.first_or_create
+  end
 end
