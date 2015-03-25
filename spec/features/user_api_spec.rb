@@ -21,12 +21,10 @@ describe 'User Api', :type => :request do
     expect(User.all.count).to equal 1
   end
 
-  it 'returns auth token immediately after creating a user' do
+  it 'returns user information after creating a user' do
     post '/users', {user: {email: 'test@test.com', username: 'test', password: 'asdf'}}
-    expect(ApiKey.count).to eq 1
-
-    token = ApiKey.find 1
-    expect(response.body).to include(token.access_token)
+    expect(response.body).to eq(
+      "{\"user\":{\"id\":1,\"username\":\"test\",\"email\":\"test@test.com\",\"admin\":false,\"password\":\"asdf\"}}")
 
   end
 
@@ -35,7 +33,7 @@ describe 'User Api', :type => :request do
     api_key = user.session_api_key
     get '/users', {}, { 'Authorization' => "Bearer #{api_key.access_token}" }
     expect(response.body).to eq(
-      "{\"users\":[{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":false}]}")
+      "{\"users\":[{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":false,\"password\":null}]}")
   end
 
   it "returns user info when a valid token is provided" do
@@ -43,7 +41,7 @@ describe 'User Api', :type => :request do
     api_key = user.session_api_key
     get '/users/1', {}, { 'Authorization' => "Bearer #{api_key.access_token}" }
     expect(response.body).to eq(
-      "{\"user\":{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":false}}")
+      "{\"user\":{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":false,\"password\":null}}")
   end
 
 end

@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     if user.new_record?
       render json: { errors: user.errors.messages }, status: 422
     else
-      render json: user.session_api_key, status: 201
+      render json: user
     end
   end
 
