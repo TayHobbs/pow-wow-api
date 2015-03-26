@@ -12,4 +12,8 @@ class User < ActiveRecord::Base
   def session_api_key
     api_keys.active.session.first_or_create
   end
+
+  def access_token_matches?(access_token)
+    session_api_key.access_token == access_token
+  end
 end
