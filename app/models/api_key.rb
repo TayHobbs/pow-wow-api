@@ -17,7 +17,6 @@ class ApiKey < ActiveRecord::Base
                       end
   end
 
-
   def generate_access_token
     begin
       self.access_token = SecureRandom.hex
