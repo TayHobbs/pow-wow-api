@@ -51,11 +51,12 @@ describe 'User Api', :type => :request do
     expect(response.status).to eq 401
   end
 
-  it 'deletes user when token is present' do
+  it 'deletes user and api_key when token is present' do
     user = User.create!(user_attributes)
     api_key = user.session_api_key
     delete '/users/1', {}, { 'Authorization' => "#{api_key.access_token}" }
     expect(User.all.count).to eq 0
+    expect(ApiKey.all.count).to eq 0
     expect(response.body).to eq "{\"message\":\"Account successfully deleted!\"}"
   end
 
