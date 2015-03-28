@@ -76,4 +76,38 @@ describe 'User Api', :type => :request do
     expect(response.body).to eq "{\"error\":\"You can only delete your own account!\"}"
   end
 
+  it 'does not update a user when no token present' do
+    User.create!(user_attributes)
+    put '/users/1', {user: {email: 'test@test.com', username: 'test'}}
+    expect(response.status).to eq 403
+    expect(User.find(1).username).to eq 'William Wallace'
+  end
+
+  it 'updates user when token is present' do
+    user = User.create!(user_attributes)
+    api_key = user.session_api_key
+    patch('/users/1',
+      {user: {email: 'test@test.com', username: 'test', password: 'Testing1'}},
+      { 'Authorization' => "#{api_key.access_token}" })
+    expect(response.status).to eq 200
+    expect(User.find(1).username).to eq 'test'
+    expect(response.body).to eq "{\"user\":{\"id\":1,\"username\":\"test\",\"email\":\"test@test.com\",\"admin\":false,\"password\":\"Testing1\"}}"
+  end
+
+  it 'gracefully handles trying to update a user that does not exist' do
+    user = User.create!(user_attributes)
+    api_key = user.session_api_key
+    patch '/users/2', {}, { 'Authorization' => "#{api_key.access_token}" }
+    expect(response.body).to eq "{\"error\":\"This account doesn't exist!\"}"
+  end
+
+  it 'only lets a user edit themselves' do
+    user_one = User.create!(user_attributes)
+    User.create!(user_attributes(:id => 2, :username => 'test', :email => 'test@test.com'))
+    api_key = user_one.session_api_key
+    patch '/users/2', {}, { 'Authorization' => "#{api_key.access_token}" }
+    expect(response.status).to eq 403
+    expect(response.body).to eq "{\"error\":\"You can only edit your own account!\"}"
+  end
+
 end

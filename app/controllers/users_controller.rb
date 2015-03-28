@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_filter :ensure_authenticated_user, only: [:index, :show, :destroy]
-  before_action :get_user, only: [:show, :destroy]
+  before_action :get_user, only: [:show, :destroy, :update]
 
   def index
     render json: User.all
@@ -26,6 +26,16 @@ class UsersController < ApplicationController
       end
     else
       render json: { error: 'You can only delete your own account!' }, status: 403
+    end
+  end
+
+  def update
+    if @user.access_token_matches?(request.headers["HTTP_AUTHORIZATION"])
+      if @user.update(user_params)
+        render json: @user
+      end
+    else
+      render json: { error: 'You can only edit your own account!' }, status: 403
     end
   end
 
