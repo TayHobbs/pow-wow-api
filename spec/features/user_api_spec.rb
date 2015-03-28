@@ -72,7 +72,8 @@ describe 'User Api', :type => :request do
     User.create!(user_attributes(:id => 2, :username => 'test', :email => 'test@test.com'))
     api_key = user_one.session_api_key
     delete '/users/2', {}, { 'Authorization' => "#{api_key.access_token}" }
-    expect(response.body).to eq "{}"
+    expect(response.status).to eq 403
+    expect(response.body).to eq "{\"error\":\"You can only delete your own account!\"}"
   end
 
 end

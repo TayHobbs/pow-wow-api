@@ -25,7 +25,7 @@ class UsersController < ApplicationController
         render json: {}, status: 200
       end
     else
-      render json: {}, status: 403
+      render json: { error: 'You can only delete your own account!' }, status: 403
     end
   end
 
