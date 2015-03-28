@@ -22,10 +22,10 @@ class UsersController < ApplicationController
   def destroy
     if @user.access_token_matches?(request.headers["HTTP_AUTHORIZATION"])
       if @user.destroy
-        render json: { message: 'Account successfully deleted!' }
+        render json: {}, status: 200
       end
     else
-      render json: { error: 'You can only delete your own account!' }
+      render json: {}, status: 403
     end
   end
 

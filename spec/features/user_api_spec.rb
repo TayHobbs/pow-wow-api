@@ -57,7 +57,7 @@ describe 'User Api', :type => :request do
     delete '/users/1', {}, { 'Authorization' => "#{api_key.access_token}" }
     expect(User.all.count).to eq 0
     expect(ApiKey.all.count).to eq 0
-    expect(response.body).to eq "{\"message\":\"Account successfully deleted!\"}"
+    expect(response.body).to eq "{}"
   end
 
   it 'gracefully handles trying to delete a user that does not exist' do
@@ -72,7 +72,7 @@ describe 'User Api', :type => :request do
     User.create!(user_attributes(:id => 2, :username => 'test', :email => 'test@test.com'))
     api_key = user_one.session_api_key
     delete '/users/2', {}, { 'Authorization' => "#{api_key.access_token}" }
-    expect(response.body).to eq "{\"error\":\"You can only delete your own account!\"}"
+    expect(response.body).to eq "{}"
   end
 
 end
