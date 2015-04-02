@@ -3,7 +3,11 @@ class UsersController < ApplicationController
   before_action :get_user, only: [:show, :destroy, :update]
 
   def index
-    render json: User.all
+    if current_user.admin?
+      render json: User.all
+    else
+      render json: { error: "You do not have the proper access to view this page." }, status: 403
+    end
   end
 
   def show
