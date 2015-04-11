@@ -3,6 +3,15 @@ require 'rails_helper'
 describe 'User Api', :type => :request do
 
   it 'requires a valid token to retrieve a list of users' do
+    user = User.create!(user_attributes)
+    api_key = user.session_api_key
+    get '/users', {}, { 'Authorization' => "Bearer #{api_key.access_token}" }
+    expect(response.status).to eq 403
+    expect(response.body).to eq(
+      "{\"error\":\"You do not have the proper access to view this page.\"}")
+  end
+
+  it 'requires a user to be an admin to retrieve a list of users' do
     User.create!(user_attributes)
     get '/users'
     expect(response.status).to eq 401
@@ -28,12 +37,12 @@ describe 'User Api', :type => :request do
 
   end
 
-  it "returns a list of users when a valid token is provided" do
-    user = User.create!(user_attributes)
+  it "returns a list of users when a valid token is provided and user is admin" do
+    user = User.create!(user_attributes(:admin => true))
     api_key = user.session_api_key
     get '/users', {}, { 'Authorization' => "Bearer #{api_key.access_token}" }
     expect(response.body).to eq(
-      "{\"users\":[{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":false,\"password\":null}]}")
+      "{\"users\":[{\"id\":1,\"username\":\"William Wallace\",\"email\":\"william.wallace@scotland.com\",\"admin\":true,\"password\":null}]}")
   end
 
   it "returns user info when a valid token is provided" do

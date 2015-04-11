@@ -17,6 +17,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'active_model_serializers', '~> 0.8.3'
 gem 'pry'
 gem 'rack-cors'
+gem 'skylight'
 group :development, :production do
   gem 'pg'
 end

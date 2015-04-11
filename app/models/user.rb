@@ -7,10 +7,10 @@ class User < ActiveRecord::Base
   validates :email, presence: true,
                   format: /.+@.+\..+/i,
                   uniqueness: { case_sensitive: false }
-  
+
 
   def session_api_key
-    api_keys.active.session.first_or_create
+    api_keys.active.first_or_create
   end
 
   def access_token_matches?(access_token)
