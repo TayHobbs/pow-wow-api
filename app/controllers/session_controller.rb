@@ -1,4 +1,5 @@
 class SessionController < ApplicationController
+
   def create
     user = User.where("username = ? OR email = ?", params[:login], params[:login]).first
     if user && user.authenticate(params[:password])
@@ -7,4 +8,5 @@ class SessionController < ApplicationController
       render json: {}, status: 401
     end
   end
+
 end
