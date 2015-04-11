@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.access_token_matches?(request.headers["HTTP_AUTHORIZATION"])
+    if @user.access_token_matches?(request.headers["HTTP_AUTHORIZATION"]) or (current_user and current_user.admin?)
       if @user.update(user_params)
         render json: @user
       end
