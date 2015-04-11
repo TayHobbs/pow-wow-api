@@ -34,7 +34,6 @@ describe 'User Api', :type => :request do
     post '/users', {user: {email: 'test@test.com', username: 'test', password: 'asdf'}}
     expect(response.body).to eq(
       "{\"user\":{\"id\":1,\"username\":\"test\",\"email\":\"test@test.com\",\"admin\":false,\"password\":\"asdf\"}}")
-
   end
 
   it "returns a list of users when a valid token is provided and user is admin" do

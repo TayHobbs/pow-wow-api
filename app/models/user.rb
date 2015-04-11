@@ -16,4 +16,13 @@ class User < ActiveRecord::Base
   def access_token_matches?(access_token)
     session_api_key.access_token == access_token
   end
+
+  def generate_new_access_token
+    self.delete_tokens
+    ApiKey.create(user: self)
+  end
+
+  def delete_tokens
+    ApiKey.delete_all(["user_id = ?", self])
+  end
 end
