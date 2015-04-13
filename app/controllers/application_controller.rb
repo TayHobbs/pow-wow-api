@@ -6,7 +6,10 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    api_key = ApiKey.active.where(access_token: token).first
+    unless api_key = ApiKey.active.where(access_token: token).first
+      api_key = reauthenticate
+    end
+
     if api_key
       return api_key.user
     else
@@ -23,4 +26,13 @@ class ApplicationController < ActionController::API
       nil
     end
   end
+
+  def reauthenticate
+    if request.headers['HTTP_REFRESH'] and api_key = ApiKey.where(refresh_token: request.headers['HTTP_REFRESH']).first
+      user = api_key.user
+      user.generate_new_access_token
+      user.session_api_key
+    end
+  end
+
 end

@@ -34,7 +34,6 @@ describe 'User Api', :type => :request do
     post '/users', {user: {email: 'test@test.com', username: 'test', password: 'asdf'}}
     expect(response.body).to eq(
       "{\"user\":{\"id\":1,\"username\":\"test\",\"email\":\"test@test.com\",\"admin\":false,\"password\":\"asdf\"}}")
-
   end
 
   it "returns a list of users when a valid token is provided and user is admin" do
@@ -117,6 +116,16 @@ describe 'User Api', :type => :request do
     patch '/users/2', {}, { 'Authorization' => "#{api_key.access_token}" }
     expect(response.status).to eq 403
     expect(response.body).to eq "{\"error\":\"You can only edit your own account!\"}"
+  end
+
+  it 'lets an admin user edit another user' do
+    admin = User.create!(user_attributes(:username => 'test', :email => 'test@test.com', :admin => true))
+    User.create!(user_attributes(:id => 2))
+    api_key = admin.session_api_key
+    patch '/users/2', { 'user': {'username': 'testUser'} }, { 'Authorization' => "#{api_key.access_token}" }
+    expect(response.status).to eq 200
+    expect(response.body).to eq(
+      "{\"user\":{\"id\":2,\"username\":\"testUser\",\"email\":\"william.wallace@scotland.com\",\"admin\":false,\"password\":null}}")
   end
 
 end
