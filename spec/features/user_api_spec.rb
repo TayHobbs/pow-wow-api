@@ -128,10 +128,4 @@ describe 'User Api', :type => :request do
       "{\"user\":{\"id\":2,\"username\":\"testUser\",\"email\":\"william.wallace@scotland.com\",\"admin\":false,\"password\":null}}")
   end
 
-  it 'resets a forgotten password' do
-    user = User.create!(user_attributes)
-    api_key = user.session_api_key
-    post '/user/1/forgot', {}, { 'Authorization' => api_key.access_token }
-  end
-
 end
