@@ -21,7 +21,8 @@ RSpec.describe UserMailer, type: :mailer do
   end
 
   it 'includes the reset-password email' do
-    expect(mail.body.encoded).to match("https://pow-wow-api.com/user/#{user.email}/reset-password")
+    expect(mail.body.encoded).to match(
+      "https://pow-wow-api.com/user/#{user.email}/reset-password/#{user.password_reset_code}")
   end
 
 end
