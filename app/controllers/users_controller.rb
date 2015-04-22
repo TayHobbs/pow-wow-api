@@ -48,6 +48,11 @@ class UsersController < ApplicationController
     UserMailer.send_forgotten_password_email(user).deliver_now
   end
 
+  def reset_password
+    user = User.find_by(:email => params[:email])
+    user.reset_password(params[:reset_code])
+  end
+
   private
 
   def get_user
