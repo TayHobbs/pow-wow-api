@@ -62,4 +62,9 @@ describe "User Validation" do
     expect(api_key.access_token).to match(/\S{32}/)
     assert api_key.user_id == user.id
   end
+
+  it "creates a password_reset_code when user is created" do
+    user = User.create!(user_attributes)
+    expect(user.password_reset_code).to match(/\S{32}/)
+  end
 end

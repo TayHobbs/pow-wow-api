@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_secure_password
+  before_create :generate_password_reset_code
   has_many :api_keys, :dependent => :delete_all
 
   validates :username, presence: true,
@@ -26,4 +27,11 @@ class User < ActiveRecord::Base
   def delete_tokens
     ApiKey.delete_all(["user_id = ?", self])
   end
+
+  def generate_password_reset_code
+    begin
+      self.password_reset_code = SecureRandom.hex
+    end while self.class.exists?(password_reset_code: password_reset_code)
+  end
+
 end
