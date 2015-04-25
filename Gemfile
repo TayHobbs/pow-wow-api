@@ -18,6 +18,7 @@ gem 'active_model_serializers', '~> 0.8.3'
 gem 'pry'
 gem 'rack-cors'
 gem 'skylight'
+gem 'swagger-docs'
 group :development, :production do
   gem 'pg'
 end

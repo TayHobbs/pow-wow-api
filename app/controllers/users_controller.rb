@@ -2,6 +2,15 @@ class UsersController < ApplicationController
   before_filter :ensure_authenticated_user, only: [:index, :show, :destroy]
   before_action :get_user, only: [:show, :destroy, :update]
 
+  swagger_controller :users, "User Management"
+
+  swagger_api :index do
+    summary "Fetches all User items"
+    notes "This lists all the active users"
+    response :unauthorized
+    response :not_acceptable
+  end
+
   def index
     if current_user.admin?
       render json: User.all
