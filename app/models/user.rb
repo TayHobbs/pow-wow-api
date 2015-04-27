@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
   def reset_password(reset_code)
     if password_reset_code == reset_code
       self.password = (0...10).map { (65 + rand(26)).chr }.join
+      self.save
     end
   end
 
