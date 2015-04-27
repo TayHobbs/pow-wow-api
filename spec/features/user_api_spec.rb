@@ -139,7 +139,13 @@ describe 'User Api', :type => :request do
     get "/users/william.wallace@scotland.com/reset/#{user.password_reset_code}"
     expect(user.username).to eq(User.find(1).username)
     expect(user.password).not_to eq(User.find(1).password)
+  end
 
+  it 'changes the password_reset_code after changing the user password' do
+    user = User.create!(user_attributes)
+    get "/users/william.wallace@scotland.com/reset/#{user.password_reset_code}"
+    expect(user.username).to eq(User.find(1).username)
+    expect(user.password_reset_code).not_to eq(User.find(1).password_reset_code)
   end
 
 end
