@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     if current_user.admin?
       render json: User.all
     else
-      render json: { error: "You do not have the proper access to view this page." }, status: 403
+      render json: { error: 'You do not have the proper access to view this page.' }, status: 403
     end
   end
 
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if @user.access_token_matches?(request.headers["HTTP_AUTHORIZATION"])
+    if @user.access_token_matches?(request.headers['HTTP_AUTHORIZATION'])
       if @user.destroy
         render json: {}, status: 200
       end
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.access_token_matches?(request.headers["HTTP_AUTHORIZATION"]) or (current_user and current_user.admin?)
+    if @user.access_token_matches?(request.headers['HTTP_AUTHORIZATION']) or (current_user and current_user.admin?)
       if @user.update(user_params)
         render json: @user
       end

@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   end
 
   def delete_tokens
-    ApiKey.delete_all(["user_id = ?", self])
+    ApiKey.delete_all(['user_id = ?', self])
   end
 
   def generate_password_reset_code
