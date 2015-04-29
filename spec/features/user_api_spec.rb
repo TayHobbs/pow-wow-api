@@ -148,4 +148,11 @@ describe 'User Api', :type => :request do
     expect(user.password_reset_code).not_to eq(User.find(1).password_reset_code)
   end
 
+  it 'sends the user an email after resetting the password' do
+    ActionMailer::Base.deliveries = []
+    user = User.create!(user_attributes)
+    get "/users/william.wallace@scotland.com/reset/#{user.password_reset_code}"
+    expect(ActionMailer::Base.deliveries.count).to eq 1
+  end
+
 end
