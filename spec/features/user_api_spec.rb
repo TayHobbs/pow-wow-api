@@ -129,6 +129,7 @@ describe 'User Api', :type => :request do
   end
 
   it 'sends the user a password reset email from forgotten_password action' do
+    ActionMailer::Base.deliveries = []
     User.create!(user_attributes)
     get '/users/william.wallace@scotland.com/forgot'
     expect(ActionMailer::Base.deliveries.count).to eq 1
