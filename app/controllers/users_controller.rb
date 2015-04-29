@@ -50,8 +50,9 @@ class UsersController < ApplicationController
 
   def reset_password
     user = User.find_by(:email => params[:email])
-    user.reset_password(params[:reset_code])
-    UserMailer.send_reset_password_email(user).deliver_now
+    if user.reset_password(params[:reset_code])
+      UserMailer.send_reset_password_email(user).deliver_now
+    end
   end
 
   private
