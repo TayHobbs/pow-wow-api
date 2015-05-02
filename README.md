@@ -1,1 +1,1 @@
-#Pow Wow API [![Build Status](https://travis-ci.org/TayHobbs/pow-wow-api.svg?branch=master)](https://travis-ci.org/TayHobbs/pow-wow-api)
+#Pow Wow API [![Build Status](https://travis-ci.org/TayHobbs/pow-wow-api.svg?branch=master)](https://travis-ci.org/TayHobbs/pow-wow-api) [![Code Climate](https://codeclimate.com/github/TayHobbs/pow-wow-api/badges/gpa.svg)](https://codeclimate.com/github/TayHobbs/pow-wow-api)
